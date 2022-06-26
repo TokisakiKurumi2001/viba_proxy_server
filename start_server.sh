@@ -1,0 +1,1 @@
+uvicorn proxy_server:app --port 10015
