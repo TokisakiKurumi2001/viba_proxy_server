@@ -6,6 +6,7 @@ import os
 import requests
 import time
 from starlette.background import BackgroundTask
+import json
 
 
 class TranslationItem(BaseModel):
@@ -23,6 +24,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+#TODO store in database
 model_domains = {
     'Transformer': 'http://localhost:10002',
     'PhoBERT-fused NMT': 'http://localhost:10002',
@@ -47,15 +49,42 @@ async def translate(translation: TranslationItem):
 
 @app.post("/translate/file")
 async def translateFile(file: UploadFile = File(...), model: str = Form(...)):
+    domain = model_domains[model] #TODO query domain from database
+
     content = await file.read()
-    domain = model_domains[model]
-    response = requests.post(domain + '/translate/file',
-                             json={'file': content, 'model': model})
-    return response
+    text = content.decode('utf-8')
+    response = requests.post(
+        f'{domain}/translate/text', 
+        json={
+            'text': text, 
+            'model': model
+        }
+    )
+    responseData = json.loads(response.content.decode('utf-8'))
+    translated_text = responseData['ResultObj']['tgt'] #TODO handle failure cases
+
+    tmp_dir = 'tmp_files'
+    isExist = os.path.exists(tmp_dir)
+    if not isExist: 
+        os.makedirs(tmp_dir)
+        print(f'Directory "{tmp_dir}" is created!')
+
+    filename = str(int(time.time())) + file.filename
+    with open(f'{tmp_dir}/{filename}', encoding='utf-8', mode='w') as f:
+        f.write('\n'.join(translated_text))
+    
+    def cleanup(filename):
+        os.remove(f'{tmp_dir}/{filename}')
+
+    return FileResponse(
+        f'{tmp_dir}/{filename}',
+        background=BackgroundTask(cleanup, filename),
+    )
 
 
 @app.get("/models")
 async def getModels():
+    #TODO query models from database
     return {
         'models': list(model_domains.keys())
     }

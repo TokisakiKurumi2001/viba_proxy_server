@@ -6,7 +6,4 @@ Features that have been implemented/tested successfully:
 
 - Translate text
 - Get the model name
-
-Feature that need to be tested:
-
 - Translate file
