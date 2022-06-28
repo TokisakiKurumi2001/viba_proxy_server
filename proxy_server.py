@@ -26,14 +26,14 @@ app.add_middleware(
 
 #TODO store in database
 model_domains = {
-    'Transformer': 'http://localhost:10002',
-    'PhoBERT-fused NMT': 'http://localhost:10002',
-    'Loanformer': 'http://localhost:10002',
-    'BartPho': 'http://localhost:10002',
-    'Combined': 'http://localhost:10002',
-    'BARTphoEncoderPGN': 'http://localhost:10002',
-    'PE-PD-PGN': 'http://localhost:10002',
-    'M2M': 'http://localhost:10012',
+    'Transformer': 'https://ura.hcmut.edu.vn/NMT/api1',
+    'PhoBERT-fused NMT': 'https://ura.hcmut.edu.vn/NMT/api1',
+    'Loanformer': 'https://ura.hcmut.edu.vn/NMT/api1',
+    'BartPho': 'https://ura.hcmut.edu.vn/NMT/api1',
+    'Combined': 'https://ura.hcmut.edu.vn/NMT/api1',
+    'BARTphoEncoderPGN': 'https://ura.hcmut.edu.vn/NMT/api1',
+    'PE-PD-PGN': 'https://ura.hcmut.edu.vn/NMT/api1',
+    'M2M': 'https://ura.hcmut.edu.vn/NMT/api2',
 }
 
 
